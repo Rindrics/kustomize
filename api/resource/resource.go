@@ -380,6 +380,12 @@ func (r *Resource) String() string {
 // AsYAML returns the resource in Yaml form.
 // Easier to read than JSON.
 func (r *Resource) AsYAML() ([]byte, error) {
+	// Check for duplicate keys by attempting to marshal to JSON first.
+	// This will detect duplicate keys that would cause issues.
+	_, err := r.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
 	// Use kyaml's encoder directly to preserve original formatting
 	// and avoid line wrapping issues with sigs.k8s.io/yaml.JSONToYAML.
 	// See https://github.com/kubernetes-sigs/kustomize/issues/947
