@@ -20,6 +20,14 @@ func goldenFile(t *testing.T, name string) string {
 	return filepath.Join("testdata", "golden", name+".golden")
 }
 
+// assertGoldenYAML compares the actual YAML output with the golden file.
+// It automatically uses the test name from t.Name().
+// If -update flag is set, it updates the golden file instead.
+func assertGoldenYAML(t *testing.T, actual []byte) {
+	t.Helper()
+	assertGolden(t, t.Name(), actual)
+}
+
 // assertGolden compares the actual output with the golden file.
 // If -update flag is set, it updates the golden file instead.
 func assertGolden(t *testing.T, name string, actual []byte) {
