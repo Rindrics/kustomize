@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+  annotations:
+    config.kubernetes.io/origin: |
+      path: service.yaml
+spec:
+  clusterIP: None
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bob-79t79mt227
+  annotations:
+    config.kubernetes.io/origin: |
+      configuredIn: kustomization.yaml
+      configuredBy:
+        apiVersion: builtin
+        kind: ConfigMapGenerator
+data:
+  crisis: "true"
+  fruit: Indian Gooseberry
+  year: "2020"

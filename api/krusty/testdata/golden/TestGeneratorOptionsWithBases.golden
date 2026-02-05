@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shouldNotHaveHash
+  labels:
+    foo: 'bar'
+data:
+  foo: bar
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shouldHaveHash-c9867f8446
+  labels:
+    fruit: 'apple'
+data:
+  fruit: apple

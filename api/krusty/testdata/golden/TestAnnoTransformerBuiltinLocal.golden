@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-myService
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+spec:
+  ports:
+  - port: 7002

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bob-myDeployment
+  labels:
+    company: acmeCorp
+    pager: 867-5301
+spec:
+  template:
+    metadata:
+      labels:
+        backend: flawless
+        company: acmeCorp
+    spec:
+      containers:
+      - name: whatever
+        image: whatever
+  selector:
+    matchLabels:
+      company: acmeCorp
+---
+apiVersion: v1
+kind: Role
+metadata:
+  name: myRole
+  labels:
+    company: acmeCorp
+  annotations:
+    status: probationary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bob-myService
+  labels:
+    company: acmeCorp
+spec:
+  selector:
+    company: acmeCorp

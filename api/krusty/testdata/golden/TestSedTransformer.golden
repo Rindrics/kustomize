@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-a
+  annotations:
+    fruit: peach
+data:
+  foo: foo
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-6bc28fff49
+data:
+  BAR: bar
+  FOO: foo

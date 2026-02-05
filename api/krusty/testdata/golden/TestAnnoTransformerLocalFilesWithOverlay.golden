@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myNs
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: ../base/kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+---
+apiVersion: v1
+kind: Role
+metadata:
+  name: p-b-myRole
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: ../base/kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p-b-myService
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: ../base/kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: p-b-myDep
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: ../base/kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p-myService2
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myNs2
+  annotations:
+    alpha.config.kubernetes.io/transformations: |
+      - configuredIn: kustomization.yaml
+        configuredBy:
+          apiVersion: builtin
+          kind: PrefixTransformer
