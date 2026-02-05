@@ -22,9 +22,11 @@ func TestPluginEnvironment(t *testing.T) {
 			"someteam.example.com", "v1", "PrintPluginEnv")
 	defer th.Reset()
 
-	confirmBehavior(
-		kusttest_test.MakeHarnessWithFs(t, filesys.MakeFsInMemory()),
-		filesys.Separator)
+	t.Run("inMemory", func(t *testing.T) {
+		confirmBehavior(
+			kusttest_test.MakeHarnessWithFs(t, filesys.MakeFsInMemory()),
+			filesys.Separator)
+	})
 
 	// On MacOS, $TMPDIR is by default set to /var/folders/…, with /var a
 	// symlink to /private/var , which does not match our expectations
@@ -33,9 +35,11 @@ func TestPluginEnvironment(t *testing.T) {
 		t.Fatalf("err: %v", err)
 	}
 
-	confirmBehavior(
-		kusttest_test.MakeHarnessWithFs(t, filesys.MakeFsOnDisk()),
-		dir)
+	t.Run("onDisk", func(t *testing.T) {
+		confirmBehavior(
+			kusttest_test.MakeHarnessWithFs(t, filesys.MakeFsOnDisk()),
+			dir)
+	})
 }
 
 func confirmBehavior(th kusttest_test.Harness, dir string) {
