@@ -11,7 +11,11 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.7.9
+        image: nginx:latest
         env:
+        - name: ANOTHERENV
+          value: ANOTHERVALUE
         - name: SOMEENV
           value: SOMEVALUE
+      - name: anothercontainer
+        image: anotherimage

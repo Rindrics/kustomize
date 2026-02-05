@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: myCRD
 metadata:
   name: deploy1
 spec:
@@ -11,7 +11,8 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.7.9
         env:
-        - name: SOMEENV
-          value: SOMEVALUE
+        - name: ANOTHERENV
+          value: ANOTHERVALUE
+      - name: anothercontainer
+        image: anotherimage

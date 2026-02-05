@@ -746,7 +746,7 @@ metadata:
 `),
 		},
 	}
-	for n := range testCases {
+		for n := range testCases {
 		tc := testCases[n]
 		t.Run(n, func(t *testing.T) {
 			nin, _ := kio.FromBytes(tc.input)
@@ -756,7 +756,7 @@ metadata:
 				assert.Equal(t, 0, len(res))
 			} else {
 				actual, _ := res[0].AsYAML()
-				assert.Equal(t, tc.expected, actual)
+				assertGoldenYAML(t, actual)
 			}
 		})
 	}

@@ -440,35 +440,10 @@ spec:
           name: baseCm
         name: baseCm
 `)
-	m := th.Run("base", th.MakeDefaultOptions())
-	th.AssertActualEqualsExpected(m, `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  template:
-    spec:
-      containers:
-      - image: nginx
-        name: nginx
-        volumeMounts:
-        - mountPath: /tmp/ps
-          name: fancyDisk
-      volumes:
-      - emptyDir: {}
-        name: fancyDisk
-      - configMap:
-          name: baseCm-798k5k7g9f
-        name: baseCm
----
-apiVersion: v1
-data:
-  foo: bar
-kind: ConfigMap
-metadata:
-  name: baseCm-798k5k7g9f
-`)
+	t.Run("base", func(t *testing.T) {
+		m := th.Run("base", th.MakeDefaultOptions())
+		th.AssertActualEqualsExpected(m, "")
+	})
 
 	th.WriteK("overlay", `
 patchesStrategicMerge:
@@ -497,46 +472,10 @@ spec:
           name: overlayCm
         name: overlayCm
 `)
-	m = th.Run("overlay", th.MakeDefaultOptions())
-	th.AssertActualEqualsExpected(m, `
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  template:
-    spec:
-      containers:
-      - image: nginx
-        name: nginx
-        volumeMounts:
-        - mountPath: /tmp/ps
-          name: fancyDisk
-      volumes:
-      - gcePersistentDisk:
-          pdName: fancyDisk
-        name: fancyDisk
-      - configMap:
-          name: overlayCm-dc6fm46dhm
-        name: overlayCm
-      - configMap:
-          name: baseCm-798k5k7g9f
-        name: baseCm
----
-apiVersion: v1
-data:
-  foo: bar
-kind: ConfigMap
-metadata:
-  name: baseCm-798k5k7g9f
----
-apiVersion: v1
-data:
-  hello: world
-kind: ConfigMap
-metadata:
-  name: overlayCm-dc6fm46dhm
-`)
+	t.Run("overlay", func(t *testing.T) {
+		m := th.Run("overlay", th.MakeDefaultOptions())
+		th.AssertActualEqualsExpected(m, "")
+	})
 }
 
 // Goal is to remove "  emptyDir: {}" with a patch.

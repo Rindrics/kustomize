@@ -947,20 +947,22 @@ spec:
 	}
 
 	for name, test := range tests {
-		resource, err := factory.FromBytes([]byte(test.base))
-		require.NoError(t, err)
-		for _, p := range test.patch {
-			patch, err := factory.FromBytes([]byte(p))
-			require.NoError(t, err, name)
-			require.NoError(t, resource.ApplySmPatch(patch), name)
-		}
-		bytes, err := resource.AsYAML()
-		if test.errorExpected {
-			require.Error(t, err, name)
-		} else {
-			require.NoError(t, err, name)
-			assertGoldenYAML(t, bytes)
-		}
+		t.Run(name, func(t *testing.T) {
+			resource, err := factory.FromBytes([]byte(test.base))
+			require.NoError(t, err)
+			for _, p := range test.patch {
+				patch, err := factory.FromBytes([]byte(p))
+				require.NoError(t, err, name)
+				require.NoError(t, resource.ApplySmPatch(patch), name)
+			}
+			bytes, err := resource.AsYAML()
+			if test.errorExpected {
+				require.Error(t, err, name)
+			} else {
+				require.NoError(t, err)
+				assertGoldenYAML(t, bytes)
+			}
+		})
 	}
 }
 
