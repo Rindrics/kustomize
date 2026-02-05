@@ -639,14 +639,7 @@ data:
 	resource.MergeDataMapFrom(patch)
 	bytes, err := resource.AsYAML()
 	require.NoError(t, err)
-	assert.Equal(t, `apiVersion: v1
-data:
-  fruit: pear
-  spaceship: enterprise
-kind: BlahBlah
-metadata:
-  name: clown
-`, string(bytes))
+	assertGolden(t, "TestMergeDataMapFrom", bytes)
 }
 
 func TestApplySmPatch_SwapOrder(t *testing.T) {
