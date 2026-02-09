@@ -10,9 +10,9 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - env:
+      - name: nginx
+        env:
         - name: ANOTHERENV
           value: ANOTHERVALUE
-        name: nginx
-      - image: anotherimage
-        name: anothercontainer
+      - name: anothercontainer
+        image: anotherimage

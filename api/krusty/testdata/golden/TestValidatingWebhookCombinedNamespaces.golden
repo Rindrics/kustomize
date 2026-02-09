@@ -4,28 +4,19 @@ metadata:
   name: admission
   namespace: base-namespace
 spec:
+  type: ClusterIP
   ports:
   - name: https-webhook
     port: 443
     targetPort: webhook
-  type: ClusterIP
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: validatingwebhook
 webhooks:
-- admissionReviewVersions:
-  - v1
-  - v1beta1
-  clientConfig:
-    service:
-      name: admission
-      namespace: merge-namespace
-      path: /networking/v1beta1/ingresses
-  failurePolicy: Fail
+- name: validate
   matchPolicy: Equivalent
-  name: validate
   rules:
   - apiGroups:
     - networking.k8s.io
@@ -36,7 +27,16 @@ webhooks:
     - UPDATE
     resources:
     - ingresses
+  failurePolicy: Fail
   sideEffects: None
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      namespace: merge-namespace
+      name: admission
+      path: /networking/v1beta1/ingresses
 ---
 apiVersion: v1
 kind: Service
@@ -44,8 +44,8 @@ metadata:
   name: admission
   namespace: merge-namespace
 spec:
+  type: ClusterIP
   ports:
   - name: https-webhook
     port: 443
     targetPort: webhook
-  type: ClusterIP

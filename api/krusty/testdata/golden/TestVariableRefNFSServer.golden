@@ -17,24 +17,24 @@ spec:
   replicas: 1
   template:
     spec:
+      metadata:
+        labels:
+          role: nfs-server
       containers:
-      - image: gcr.io/google_containers/volume-nfs:0.8
-        name: nfs-server
+      - name: nfs-server
+        image: gcr.io/google_containers/volume-nfs:0.8
         ports:
-        - containerPort: 2049
-          name: nfs
-        - containerPort: 20048
-          name: mountd
-        - containerPort: 111
-          name: rpcbind
+        - name: nfs
+          containerPort: 2049
+        - name: mountd
+          containerPort: 20048
+        - name: rpcbind
+          containerPort: 111
         securityContext:
           privileged: true
         volumeMounts:
         - mountPath: /exports
           name: shared-files
-      metadata:
-        labels:
-          role: nfs-server
       volumes:
       - name: shared-files
         persistentVolumeClaim:
@@ -58,9 +58,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: kustomized-nginx
   labels:
     app.kubernetes.io/component: nginx
-  name: kustomized-nginx
 spec:
   selector:
     matchLabels:
@@ -71,37 +71,38 @@ spec:
         app.kubernetes.io/component: nginx
     spec:
       containers:
-      - image: nginx:1.15.7-alpine
-        name: nginx
+      - name: nginx
+        image: nginx:1.15.7-alpine
         ports:
-        - containerPort: 80
-          name: http
+        - name: http
+          containerPort: 80
         volumeMounts:
         - mountPath: shared-files
           name: nfs-files-vol
       volumes:
       - name: nfs-files-vol
         nfs:
+          server: kustomized-nfs-server-service.default.srv.cluster.local
           path: /
           readOnly: false
-          server: kustomized-nfs-server-service.default.srv.cluster.local
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: kustomized-hello
 spec:
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - args:
+          - name: hello
+            image: busybox
+            args:
             - /bin/sh
             - -c
             - date; echo Hello from the Kubernetes cluster
-            image: busybox
-            name: hello
           restartPolicy: OnFailure
           volumeMounts:
           - mountPath: shared-files
@@ -109,18 +110,17 @@ spec:
         volumes:
         - name: nfs-files-vol
           nfs:
+            server: kustomized-nfs-server-service.default.srv.cluster.local
             path: /
             readOnly: false
-            server: kustomized-nfs-server-service.default.srv.cluster.local
-  schedule: '*/1 * * * *'
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    k8s-app: fluentd-logging
   name: kustomized-fluentd-elasticsearch
   namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
 spec:
   selector:
     matchLabels:
@@ -130,9 +130,12 @@ spec:
       labels:
         name: fluentd-elasticsearch
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       containers:
-      - image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
-        name: fluentd-elasticsearch
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
         resources:
           limits:
             memory: 200Mi
@@ -140,38 +143,36 @@ spec:
             cpu: 100m
             memory: 200Mi
         volumeMounts:
-        - mountPath: /var/log
-          name: varlog
-        - mountPath: /var/lib/docker/containers
-          name: varlibdockercontainers
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
           readOnly: true
         - mountPath: shared-files
           name: nfs-files-vol
       terminationGracePeriodSeconds: 30
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
       volumes:
-      - hostPath:
+      - name: varlog
+        hostPath:
           path: /var/log
-        name: varlog
-      - hostPath:
+      - name: varlibdockercontainers
+        hostPath:
           path: /var/lib/docker/containers
-        name: varlibdockercontainers
       - name: nfs-files-vol
         nfs:
+          server: kustomized-nfs-server-service.default.srv.cluster.local
           path: /
           readOnly: false
-          server: kustomized-nfs-server-service.default.srv.cluster.local
 ---
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
+  name: kustomized-frontend
   labels:
     app: guestbook
     tier: frontend
-  name: kustomized-frontend
 spec:
+  # modify replicas according to your case
   replicas: 3
   selector:
     matchLabels:
@@ -182,93 +183,87 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: gcr.io/google_samples/gb-frontend:v3
-        name: php-redis
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
         volumeMounts:
         - mountPath: shared-files
           name: nfs-files-vol
       volumes:
       - name: nfs-files-vol
         nfs:
+          server: kustomized-nfs-server-service.default.srv.cluster.local
           path: /
           readOnly: false
-          server: kustomized-nfs-server-service.default.srv.cluster.local
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: kustomized-web
 spec:
-  replicas: 3
   selector:
     matchLabels:
-      app: nginx
-  serviceName: nginx
+      app: nginx # has to match .spec.template.metadata.labels
+  serviceName: "nginx"
+  replicas: 3 # by default is 1
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
-      - image: registry.k8s.io/nginx-slim:0.8
-        name: nginx
+      - name: nginx
+        image: registry.k8s.io/nginx-slim:0.8
         ports:
         - containerPort: 80
           name: web
         volumeMounts:
-        - mountPath: /usr/share/nginx/html
-          name: www
-      terminationGracePeriodSeconds: 10
+        - name: www
+          mountPath: /usr/share/nginx/html
   volumeClaimTemplates:
   - metadata:
       name: www
     spec:
-      accessModes:
-      - ReadWriteMany
+      accessModes: ["ReadWriteMany"]
       nfs:
+        server: kustomized-nfs-server-service.default.srv.cluster.local
         path: /
         readOnly: false
-        server: kustomized-nfs-server-service.default.srv.cluster.local
 ---
 apiVersion: v1
 kind: Pod
 metadata:
+  name: kustomized-myapp-pod
   labels:
     app: myapp
-  name: kustomized-myapp-pod
 spec:
   containers:
-  - image: nginx:1.15.7-alpine
-    name: nginx
+  - name: nginx
+    image: nginx:1.15.7-alpine
     ports:
-    - containerPort: 80
-      name: http
+    - name: http
+      containerPort: 80
   volumeMounts:
-  - mountPath: shared-files
-    name: nfs-files-vol
+  - name: nfs-files-vol
+    mountPath: shared-files
   volumes:
   - name: nfs-files-vol
     nfs:
+      server: kustomized-nfs-server-service.default.srv.cluster.local
       path: /
       readOnly: false
-      server: kustomized-nfs-server-service.default.srv.cluster.local
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: kustomized-pi
 spec:
-  backoffLimit: 4
   template:
     spec:
       containers:
-      - command:
-        - perl
-        - -Mbignum=bpi
-        - -wle
-        - print bpi(2000)
+      - name: pi
         image: perl
-        name: pi
+        command: [perl, -Mbignum=bpi, -wle, print bpi(2000)]
         volumeMounts:
         - mountPath: shared-files
           name: nfs-files-vol
@@ -276,20 +271,21 @@ spec:
       volumes:
       - name: nfs-files-vol
         nfs:
+          server: kustomized-nfs-server-service.default.srv.cluster.local
           path: /
           readOnly: false
-          server: kustomized-nfs-server-service.default.srv.cluster.local
+  backoffLimit: 4
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: kustomized-nfs-files-pv
 spec:
-  accessModes:
-  - ReadWriteMany
   capacity:
     storage: 10Gi
+  accessModes:
+  - ReadWriteMany
   nfs:
+    server: kustomized-nfs-server-service.default.srv.cluster.local
     path: /
     readOnly: false
-    server: kustomized-nfs-server-service.default.srv.cluster.local

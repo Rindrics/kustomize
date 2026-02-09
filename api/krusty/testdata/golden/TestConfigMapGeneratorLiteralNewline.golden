@@ -1,4 +1,7 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: testing-tt4769fb52
 data:
   final.txt: |
     different
@@ -6,6 +9,3 @@ data:
   initial.txt: |
     greetings
     everyone
-kind: ConfigMap
-metadata:
-  name: testing-tt4769fb52

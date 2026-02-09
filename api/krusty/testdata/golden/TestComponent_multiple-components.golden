@@ -6,13 +6,13 @@ spec:
   replicas: 3
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: comp-my-configmap-g486mb229k
 data:
   compValue: red
   otherValue: orange
   testValue: blue
-kind: ConfigMap
-metadata:
-  name: comp-my-configmap-g486mb229k
 ---
 apiVersion: v1
 kind: Deployment

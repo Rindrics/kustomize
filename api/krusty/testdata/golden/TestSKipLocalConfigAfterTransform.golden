@@ -6,5 +6,5 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx
-        name: app
+      - name: app
+        image: nginx

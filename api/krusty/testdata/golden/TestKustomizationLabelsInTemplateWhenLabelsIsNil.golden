@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: deployment
   labels:
-    app: test-server
     app.kubernetes.io/component: a
     app.kubernetes.io/instance: b
     app.kubernetes.io/name: c
     app.kubernetes.io/part-of: d
-  name: deployment
+    app: test-server
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: test-server
   template:
+    spec:
+      containers:
+      - name: test-server
+        image: test-server
     metadata:
       labels:
-        app: test-server
         app.kubernetes.io/component: a
         app.kubernetes.io/instance: b
         app.kubernetes.io/name: c
         app.kubernetes.io/part-of: d
-    spec:
-      containers:
-      - image: test-server
-        name: test-server
+        app: test-server
+  selector:
+    matchLabels:
+      app: test-server

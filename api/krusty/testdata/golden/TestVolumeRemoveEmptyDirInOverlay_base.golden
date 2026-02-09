@@ -6,21 +6,21 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
         volumeMounts:
-        - mountPath: /tmp/ps
-          name: fancyDisk
+        - name: fancyDisk
+          mountPath: /tmp/ps
       volumes:
-      - emptyDir: {}
-        name: fancyDisk
+      - name: fancyDisk
+        emptyDir: {}
       - configMap:
           name: baseCm-798k5k7g9f
         name: baseCm
 ---
 apiVersion: v1
-data:
-  foo: bar
 kind: ConfigMap
 metadata:
   name: baseCm-798k5k7g9f
+data:
+  foo: bar

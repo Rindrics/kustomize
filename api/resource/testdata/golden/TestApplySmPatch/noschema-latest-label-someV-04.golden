@@ -10,5 +10,5 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - image: nginx:nginx
-        name: nginx
+      - name: nginx
+        image: nginx:nginx

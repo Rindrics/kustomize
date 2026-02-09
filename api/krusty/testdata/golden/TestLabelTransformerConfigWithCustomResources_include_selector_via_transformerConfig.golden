@@ -1,20 +1,20 @@
 apiVersion: custom.example.org/v1
 kind: SampleResource
 metadata:
+  name: sample-resource
+  namespace: sample-namespace
   labels:
     environment: dev
     location: planet-earth
-  name: sample-resource
-  namespace: sample-namespace
 spec:
+  template:
+    spec:
+      containers:
+      - image: index.docker.io/library/hello-world
+        env:
+        - name: VARIABLE
+          value: value
   selectors:
     labels:
       environment: dev
       location: planet-earth
-  template:
-    spec:
-      containers:
-      - env:
-        - name: VARIABLE
-          value: value
-        image: index.docker.io/library/hello-world

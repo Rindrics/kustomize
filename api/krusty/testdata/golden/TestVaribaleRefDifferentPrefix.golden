@@ -6,21 +6,21 @@ spec:
   template:
     spec:
       containers:
-      - env:
+      - name: elasticsearch
+        env:
         - name: DISCOVERY_SERVICE
           value: base-dev-elasticsearch.monitoring.svc.cluster.local
-        name: elasticsearch
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: base-dev-elasticsearch
 spec:
-  clusterIP: None
   ports:
   - name: transport
     port: 9300
     protocol: TCP
+  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -30,18 +30,18 @@ spec:
   template:
     spec:
       containers:
-      - env:
+      - name: elasticsearch
+        env:
         - name: DISCOVERY_SERVICE
           value: base-test-elasticsearch.monitoring.svc.cluster.local
-        name: elasticsearch
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: base-test-elasticsearch
 spec:
-  clusterIP: None
   ports:
   - name: transport
     port: 9300
     protocol: TCP
+  clusterIP: None

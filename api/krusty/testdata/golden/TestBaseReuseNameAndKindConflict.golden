@@ -6,8 +6,8 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 ---
 apiVersion: v1
 kind: StatefulSet
@@ -17,5 +17,5 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx

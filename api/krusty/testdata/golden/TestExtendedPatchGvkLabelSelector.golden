@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx
   labels:
     app: nginx
-  name: nginx
 spec:
   template:
     metadata:
@@ -11,14 +11,14 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
         volumeMounts:
-        - mountPath: /tmp/ps
-          name: nginx-persistent-storage
+        - name: nginx-persistent-storage
+          mountPath: /tmp/ps
       volumes:
-      - emptyDir: {}
-        name: nginx-persistent-storage
+      - name: nginx-persistent-storage
+        emptyDir: {}
       - configMap:
           name: configmap-in-base
         name: configmap-in-base
@@ -26,11 +26,11 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    new-key: new-value
+  name: busybox
   labels:
     app: busybox
-  name: busybox
+  annotations:
+    new-key: new-value
 spec:
   template:
     metadata:
@@ -38,14 +38,14 @@ spec:
         app: busybox
     spec:
       containers:
-      - image: busybox
-        name: busybox
+      - name: busybox
+        image: busybox
         volumeMounts:
-        - mountPath: /tmp/ps
-          name: busybox-persistent-storage
+        - name: busybox-persistent-storage
+          mountPath: /tmp/ps
       volumes:
-      - emptyDir: {}
-        name: busybox-persistent-storage
+      - name: busybox-persistent-storage
+        emptyDir: {}
       - configMap:
           name: configmap-in-base
         name: configmap-in-base
@@ -53,9 +53,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: nginx
   labels:
     app: nginx
-  name: nginx
 spec:
   ports:
   - port: 80
@@ -65,9 +65,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: busybox
   labels:
     app: busybox
-  name: busybox
 spec:
   ports:
   - port: 8080

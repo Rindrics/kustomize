@@ -18,5 +18,5 @@ spec:
   template:
     spec:
       containers:
-      - image: abbott:v2
-        name: tomato
+      - name: tomato
+        image: abbott:v2

@@ -1,39 +1,25 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: external-dns
   labels:
     app: external-dns
     instance: public
-  name: external-dns
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  - pods
-  - services
-  - nodes
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups:
-  - extensions
-  - networking.k8s.io
-  resources:
-  - ingresses
-  verbs:
-  - get
-  - watch
-  - list
+- apiGroups: ['']
+  resources: ['endpoints', 'pods', 'services', 'nodes']
+  verbs: ['get', 'watch', 'list']
+- apiGroups: ['extensions', 'networking.k8s.io']
+  resources: ['ingresses']
+  verbs: ['get', 'watch', 'list']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  name: external-dns-viewer
   labels:
     app: external-dns
     instance: public
-  name: external-dns-viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88,13 +74,21 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  name: external-dns
+  namespace: kube-system
   labels:
     app: external-dns
     instance: public
-  name: external-dns
-  namespace: kube-system
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-config-file-66cc4224mm
+  labels:
+    app: external-dns
+    instance: public
+  namespace: kube-system
+type: Opaque
 data:
   azure.json: |
     ewoJInRlbmFudElkIjogIlhYWFhYLVhYWFhYWC1YWFhYWC1YWFhYWFgtWFhYWFhYIiwKCS
@@ -102,51 +96,29 @@ data:
     CgkicmVzb3VyY2VHcm91cCI6ICJETlMtRVVXLVhYWC1SRyIsCgkidXNlTWFuYWdlZElkZW
     50aXR5RXh0ZW5zaW9uIjogdHJ1ZSwKCSJ1c2VyQXNzaWduZWRJZGVudGl0eUlEIjogIlhY
     WFhYLVhYWFhYWC1YWFhYWC1YWFhYWFgtWFhYWFhYIgp9Cg==
-kind: Secret
-metadata:
-  labels:
-    app: external-dns
-    instance: public
-  name: azure-config-file-66cc4224mm
-  namespace: kube-system
-type: Opaque
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: external-dns-private
   labels:
     app: external-dns
     instance: private
-  name: external-dns-private
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  - pods
-  - services
-  - nodes
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups:
-  - extensions
-  - networking.k8s.io
-  resources:
-  - ingresses
-  verbs:
-  - get
-  - watch
-  - list
+- apiGroups: ['']
+  resources: ['endpoints', 'pods', 'services', 'nodes']
+  verbs: ['get', 'watch', 'list']
+- apiGroups: ['extensions', 'networking.k8s.io']
+  resources: ['ingresses']
+  verbs: ['get', 'watch', 'list']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  name: external-dns-viewer-private
   labels:
     app: external-dns
     instance: private
-  name: external-dns-viewer-private
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -201,13 +173,21 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  name: external-dns-private
+  namespace: kube-system
   labels:
     app: external-dns
     instance: private
-  name: external-dns-private
-  namespace: kube-system
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-config-file-private-66cc4224mm
+  labels:
+    app: external-dns
+    instance: private
+  namespace: kube-system
+type: Opaque
 data:
   azure.json: |
     ewoJInRlbmFudElkIjogIlhYWFhYLVhYWFhYWC1YWFhYWC1YWFhYWFgtWFhYWFhYIiwKCS
@@ -215,11 +195,3 @@ data:
     CgkicmVzb3VyY2VHcm91cCI6ICJETlMtRVVXLVhYWC1SRyIsCgkidXNlTWFuYWdlZElkZW
     50aXR5RXh0ZW5zaW9uIjogdHJ1ZSwKCSJ1c2VyQXNzaWduZWRJZGVudGl0eUlEIjogIlhY
     WFhYLVhYWFhYWC1YWFhYWC1YWFhYWFgtWFhYWFhYIgp9Cg==
-kind: Secret
-metadata:
-  labels:
-    app: external-dns
-    instance: private
-  name: azure-config-file-private-66cc4224mm
-  namespace: kube-system
-type: Opaque

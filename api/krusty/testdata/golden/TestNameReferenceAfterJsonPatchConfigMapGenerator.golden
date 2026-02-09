@@ -23,8 +23,8 @@ spec:
         name: myvol
 ---
 apiVersion: v1
-data:
-  bar: bar
 kind: ConfigMap
 metadata:
   name: cm-8hm8224gfd
+data:
+  bar: bar
