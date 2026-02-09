@@ -6,6 +6,6 @@ spec:
   template:
     spec:
       volumes:
-      - gcePersistentDisk:
+      - name: fancyDisk
+        gcePersistentDisk:
           pdName: fancyDisk
-        name: fancyDisk

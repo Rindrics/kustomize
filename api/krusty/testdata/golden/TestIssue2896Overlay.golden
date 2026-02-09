@@ -6,12 +6,12 @@ spec:
   template:
     spec:
       containers:
-      - image: example:2.0
-        name: example
+      - name: example
+        image: example:2.0
         volumeMounts:
-        - mountPath: /etc/config
-          name: conf
+        - name: conf
+          mountPath: /etc/config
       volumes:
-      - configMap:
+      - name: conf
+        configMap:
           name: conf
-        name: conf

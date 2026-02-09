@@ -1,25 +1,22 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  annotations:
-    config.kubernetes.io/origin: |
-      path: ../base/short_secret.yaml
   labels:
     airshipit.org/ephemeral-user-data: "true"
   name: node1-bmc-secret
+  annotations:
+    config.kubernetes.io/origin: |
+      path: ../base/short_secret.yaml
+type: Opaque
 stringData:
   userData: |
     bootcmd:
     - mkdir /mnt/vda
-type: Opaque
 ---
 apiVersion: v1
-data:
-  crisis: "true"
-  fruit: Indian Gooseberry
-  year: "2020"
 kind: ConfigMap
 metadata:
+  name: bob-79t79mt227
   annotations:
     config.kubernetes.io/origin: |
       configuredIn: ../base/configmap.yaml
@@ -27,4 +24,7 @@ metadata:
         apiVersion: builtin
         kind: ConfigMapGenerator
         name: notImportantHere
-  name: bob-79t79mt227
+data:
+  crisis: "true"
+  fruit: Indian Gooseberry
+  year: "2020"

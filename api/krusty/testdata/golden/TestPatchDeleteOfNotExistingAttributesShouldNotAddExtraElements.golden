@@ -9,5 +9,5 @@ spec:
       - env:
         - name: EXISTING
           value: EXISTING_VALUE
-        image: helloworld
         name: whatever
+        image: helloworld

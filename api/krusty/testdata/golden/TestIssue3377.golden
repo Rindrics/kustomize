@@ -13,27 +13,27 @@ spec:
         app.kubernetes.io/component: service-a
     spec:
       containers:
-      - env:
-        - name: REDIRECT_URI
-          value: http://new-service-b.k8s.com:80/oauth_redir
-        image: repository/service-a:v1
+      - image: repository/service-a:v1
         imagePullPolicy: Always
         name: service-b
         ports:
         - containerPort: 8080
+        env:
+        - name: REDIRECT_URI
+          value: http://new-service-b.k8s.com:80/oauth_redir
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: service-a
   labels:
     app.kubernetes.io/component: service-a
-  name: service-a
 spec:
+  type: LoadBalancer
   ports:
   - port: 8080
   selector:
     app.kubernetes.io/component: service-a
-  type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -67,27 +67,27 @@ spec:
         app.kubernetes.io/component: service-b
     spec:
       containers:
-      - env:
-        - name: REDIRECT_URI
-          value: http://new-service-a.k8s.com:80/oauth_redir
-        image: repository/service-b:v1
+      - image: repository/service-b:v1
         imagePullPolicy: Always
         name: service-b
         ports:
         - containerPort: 8080
+        env:
+        - name: REDIRECT_URI
+          value: http://new-service-a.k8s.com:80/oauth_redir
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: service-b
   labels:
     app.kubernetes.io/component: service-b
-  name: service-b
 spec:
+  type: LoadBalancer
   ports:
   - port: 8080
   selector:
     app.kubernetes.io/component: service-b
-  type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

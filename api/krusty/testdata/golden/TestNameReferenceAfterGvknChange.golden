@@ -14,9 +14,9 @@ spec:
       - env:
         - valueFrom:
             configMapKeyRef:
-              key: somekey
               name: new-name
+              key: somekey
         envFrom:
         - configMapRef:
-            key: somekey
             name: new-name
+            key: somekey

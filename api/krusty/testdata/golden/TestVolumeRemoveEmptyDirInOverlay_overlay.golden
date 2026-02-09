@@ -6,15 +6,15 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
         volumeMounts:
-        - mountPath: /tmp/ps
-          name: fancyDisk
+        - name: fancyDisk
+          mountPath: /tmp/ps
       volumes:
-      - gcePersistentDisk:
+      - name: fancyDisk
+        gcePersistentDisk:
           pdName: fancyDisk
-        name: fancyDisk
       - configMap:
           name: overlayCm-dc6fm46dhm
         name: overlayCm
@@ -23,15 +23,15 @@ spec:
         name: baseCm
 ---
 apiVersion: v1
-data:
-  foo: bar
 kind: ConfigMap
 metadata:
   name: baseCm-798k5k7g9f
+data:
+  foo: bar
 ---
 apiVersion: v1
-data:
-  hello: world
 kind: ConfigMap
 metadata:
   name: overlayCm-dc6fm46dhm
+data:
+  hello: world

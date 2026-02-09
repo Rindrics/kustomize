@@ -4,11 +4,11 @@ metadata:
   name: base-clown
 spec:
   containers:
-  - command:
+  - name: frown
+    image: frown
+    command:
     - echo
     - base-clown
     env:
     - name: FOO
       value: base-clown
-    image: frown
-    name: frown

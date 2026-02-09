@@ -5,8 +5,8 @@ metadata:
   namespace: kustomize-namespace
 spec:
   containers:
-  - env:
-    - name: CURRENT_POD_NAMESPACE
-      value: kustomize-namespace
-    image: busybox
+  - image: busybox
     name: myapp-container
+    env:
+    - name: CURRENT_POD_NAMESPACE
+      value: "kustomize-namespace"

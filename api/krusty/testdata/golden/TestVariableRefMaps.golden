@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    my-annotation: my-namespace
+  name: my-deployment
   labels:
     my-label: my-namespace
-  name: my-deployment
+  annotations:
+    my-annotation: my-namespace
 spec:
   template:
     spec:
       containers:
-      - image: busybox
-        name: app
+      - name: app
+        image: busybox
 ---
 apiVersion: v1
 kind: Namespace
