@@ -735,11 +735,11 @@ template: |
 	actual, err := m.AsYaml()
 	require.NoError(t, err)
 	assert.Equal(t, `apiVersion: v1
-data:
-  value: value
 kind: ConfigMap
 metadata:
   name: env
+data:
+  value: "value"
 `, string(actual))
 }
 
