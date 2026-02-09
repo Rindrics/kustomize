@@ -1,12 +1,12 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-t7tt4cdbmf
 data:
   HOST: everest
   MYSQL_DATABASE: db
   MYSQL_PASSWORD: correct horse battery staple
   MYSQL_USER: my-user
-kind: ConfigMap
-metadata:
-  name: mysql-t7tt4cdbmf
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -16,12 +16,12 @@ spec:
   template:
     spec:
       containers:
-      - env:
+      - name: handler
+        env:
         - valueFrom:
             configMapKeyRef:
-              key: MYSQL_DATABASE
               name: mysql-t7tt4cdbmf
+              key: MYSQL_DATABASE
         envFrom:
         - configMapRef:
             name: mysql-t7tt4cdbmf
-        name: handler

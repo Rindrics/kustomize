@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       containers:
-      - image: testing123
+      - name: event
+        image: testing123
         imagePullPolicy: IfNotPresent
-        name: event
       imagePullSecrets: []

@@ -654,6 +654,7 @@ buildMetadata: [originAnnotations]
 	require.NoError(t, err)
 	assert.Contains(t, string(yml), `kind: ConfigMap
 metadata:
+  name: ldap-configmap-4d7m6k5b42
   annotations:
     config.kubernetes.io/origin: |
       repo: https://github.com/kubernetes-sigs/kustomize
@@ -661,8 +662,7 @@ metadata:
       configuredIn: examples/ldap/base/kustomization.yaml
       configuredBy:
         apiVersion: builtin
-        kind: ConfigMapGenerator
-  name: ldap-configmap-4d7m6k5b42`)
+        kind: ConfigMapGenerator`)
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
 

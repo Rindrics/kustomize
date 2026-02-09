@@ -6,8 +6,8 @@ spec:
   template:
     spec:
       containers:
-      - envFrom:
+      - name: nginx
+        image: image1
+        envFrom:
         - configMapRef:
             name: another-config
-        image: image1
-        name: nginx

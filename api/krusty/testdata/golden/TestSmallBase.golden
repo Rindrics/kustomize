@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: a-myDeployment
   labels:
     app: myApp
-  name: a-myDeployment
 spec:
-  selector:
-    matchLabels:
-      app: myApp
   template:
     metadata:
       labels:
-        app: myApp
         backend: awesome
+        app: myApp
     spec:
       containers:
-      - image: whatever
-        name: whatever
+      - name: whatever
+        image: whatever
+  selector:
+    matchLabels:
+      app: myApp
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: a-myService
   labels:
     app: myApp
-  name: a-myService
 spec:
+  selector:
+    backend: bungie
+    app: myApp
   ports:
   - port: 7002
-  selector:
-    app: myApp
-    backend: bungie

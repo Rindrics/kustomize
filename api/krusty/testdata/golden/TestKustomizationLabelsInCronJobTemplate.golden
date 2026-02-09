@@ -7,9 +7,6 @@ metadata:
   name: job
 spec:
   jobTemplate:
-    metadata:
-      labels:
-        foo: bar
     spec:
       backoffLimit: 4
       template:
@@ -19,4 +16,7 @@ spec:
             foo: bar
         spec:
           restartPolicy: Never
+    metadata:
+      labels:
+        foo: bar
   schedule: '* * * * *'

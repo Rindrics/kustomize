@@ -5,9 +5,9 @@ metadata:
   namespace: overlay-namespace
 ---
 apiVersion: v1
-data:
-  blue-namespace: base-namespace
 kind: ConfigMap
 metadata:
   name: red
   namespace: overlay-namespace
+data:
+  blue-namespace: base-namespace

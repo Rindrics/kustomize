@@ -283,6 +283,9 @@ buildMetadata: [transformerAnnotations]
 	assert.Equal(t, `apiVersion: v1
 kind: Pod
 metadata:
+  name: prod-myapp-pod
+  labels:
+    app: myapp
   annotations:
     alpha.config.kubernetes.io/transformations: |
       - repo: https://github.com/kubernetes-sigs/kustomize
@@ -291,13 +294,10 @@ metadata:
         configuredBy:
           apiVersion: builtin
           kind: PrefixTransformer
-  labels:
-    app: myapp
-  name: prod-myapp-pod
 spec:
   containers:
-  - image: nginx:1.7.9
-    name: nginx
+  - name: nginx
+    image: nginx:1.7.9
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
@@ -395,6 +395,9 @@ spec:
 	assert.Equal(t, `apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx
+  labels:
+    app: nginx
   annotations:
     alpha.config.kubernetes.io/transformations: |
       - configuredIn: kustomization.yaml
@@ -402,9 +405,6 @@ metadata:
           kind: executable
           name: demo
     tshirt-size: small
-  labels:
-    app: nginx
-  name: nginx
 spec:
   selector:
     matchLabels:
@@ -415,8 +415,8 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
@@ -465,6 +465,9 @@ spec:
 	assert.Equal(t, `apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx
+  labels:
+    app: nginx
   annotations:
     alpha.config.kubernetes.io/transformations: |
       - configuredIn: ../base/gener.yaml
@@ -472,9 +475,6 @@ metadata:
           kind: executable
           name: demo
     tshirt-size: small
-  labels:
-    app: nginx
-  name: nginx
 spec:
   selector:
     matchLabels:
@@ -485,8 +485,8 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }

@@ -1,4 +1,7 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blah-bob-db529cg5bk
 data:
   fruit: apple
   nobles: |2
@@ -10,6 +13,3 @@ data:
     xenon
     radon
   vegetable: broccoli
-kind: ConfigMap
-metadata:
-  name: blah-bob-db529cg5bk

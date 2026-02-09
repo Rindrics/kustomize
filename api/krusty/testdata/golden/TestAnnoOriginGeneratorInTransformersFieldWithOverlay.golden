@@ -1,6 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx-foo
+  labels:
+    app: nginx
   annotations:
     alpha.config.kubernetes.io/transformations: |
       - configuredIn: kustomization.yaml
@@ -13,9 +16,6 @@ metadata:
         kind: executable
         name: demo
     tshirt-size: small
-  labels:
-    app: nginx
-  name: nginx-foo
 spec:
   selector:
     matchLabels:
@@ -26,5 +26,5 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx

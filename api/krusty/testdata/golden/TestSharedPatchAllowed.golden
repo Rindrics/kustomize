@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: a-myDeployment
   labels:
     app: myApp
     env: prod
-  name: a-myDeployment
 spec:
-  replicas: 1000
+  template:
+    metadata:
+      labels:
+        backend: awesome
+        app: myApp
+        env: prod
+    spec:
+      containers:
+      - name: whatever
+        image: whatever
   selector:
     matchLabels:
       app: myApp
       env: prod
-  template:
-    metadata:
-      labels:
-        app: myApp
-        backend: awesome
-        env: prod
-    spec:
-      containers:
-      - image: whatever
-        name: whatever
+  replicas: 1000
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: a-myService
   labels:
     app: myApp
     env: prod
-  name: a-myService
 spec:
+  selector:
+    backend: bungie
+    app: myApp
+    env: prod
   ports:
   - port: 7002
-  selector:
-    app: myApp
-    backend: bungie
-    env: prod

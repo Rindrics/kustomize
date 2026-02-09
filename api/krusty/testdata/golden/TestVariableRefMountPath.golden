@@ -6,17 +6,17 @@ spec:
   template:
     spec:
       containers:
-      - env:
+      - name: app
+        image: busybox
+        volumeMounts:
+        - name: my-volume
+          mountPath: /my-namespace
+        env:
         - name: NAMESPACE
           value: my-namespace
-        image: busybox
-        name: app
-        volumeMounts:
-        - mountPath: /my-namespace
-          name: my-volume
       volumes:
-      - emptyDir: {}
-        name: my-volume
+      - name: my-volume
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Namespace

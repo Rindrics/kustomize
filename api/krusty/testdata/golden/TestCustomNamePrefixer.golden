@@ -9,8 +9,8 @@ spec:
         backend: awesome
     spec:
       containers:
-      - image: whatever
-        name: whatever
+      - name: whatever
+        image: whatever
 ---
 apiVersion: v1
 kind: Role

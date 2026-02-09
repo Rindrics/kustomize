@@ -11,10 +11,10 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - env:
+      - name: nginx
+        env:
         - name: SOMEENV
           value: SOMEVALUE
-        name: nginx
 ---
 apiVersion: apps/v1
 kind: myCRD
@@ -29,7 +29,7 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - env:
+      - name: nginx
+        env:
         - name: SOMEENV
           value: SOMEVALUE
-        name: nginx

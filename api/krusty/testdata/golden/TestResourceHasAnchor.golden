@@ -3,29 +3,29 @@ kind: Ingress
 metadata:
   name: blog
 spec:
-  rules:
-  - host: xyz.me
-    http:
-      paths:
-      - backend:
-          service:
-            name: service
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
-  - host: www.xyz.me
-    http:
-      paths:
-      - backend:
-          service:
-            name: service
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
   tls:
   - hosts:
     - xyz.me
     - www.xyz.me
     secretName: cert-tls
+  rules:
+  - host: xyz.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service
+            port:
+              number: 80
+  - host: www.xyz.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service
+            port:
+              number: 80

@@ -102,14 +102,14 @@ metadata:
 		th.GetT().Fatalf("unexpected error: %v", err)
 	}
 
-	expected := `apiVersion: v1
-env:
-  kustomize_plugin_config_root: ` + dir + `
-  kustomize_plugin_home: ` + pHome + `
-  pwd: ` + dir + `
-kind: GeneratedEnv
+	expected := `kind: GeneratedEnv
+apiVersion: v1
 metadata:
   name: hello
+env:
+  pwd: ` + dir + `
+  kustomize_plugin_home: ` + pHome + `
+  kustomize_plugin_config_root: ` + dir + `
 `
 
 	if string(actual) != expected {
@@ -144,14 +144,14 @@ metadata:
 		th.GetT().Fatalf("unexpected error: %v", err)
 	}
 
-	expected := `apiVersion: v1
-env:
-  kustomize_plugin_config_root: ` + dir + `
-  kustomize_plugin_home: ` + pHome + `
-  pwd: ` + dir + `
-kind: GeneratedEnv
+	expected := `kind: GeneratedEnv
+apiVersion: v1
 metadata:
   name: hello
+env:
+  pwd: ` + dir + `
+  kustomize_plugin_home: ` + pHome + `
+  kustomize_plugin_config_root: ` + dir + `
 `
 
 	if string(actual) != expected {

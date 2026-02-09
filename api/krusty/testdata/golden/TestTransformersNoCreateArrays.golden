@@ -1,16 +1,16 @@
-apiVersion: apps/v1
 kind: StatefulSet
+apiVersion: apps/v1
 metadata:
+  name: test
   labels:
     notIn: arrays
-  name: test
 spec:
+  serviceName: test
   replicas: 1
   selector:
     matchLabels:
       app: test
       notIn: arrays
-  serviceName: test
   template:
     metadata:
       labels:
@@ -18,25 +18,25 @@ spec:
         notIn: arrays
     spec:
       containers:
-      - image: registry.k8s.io/nginx-slim:0.8
-        name: nginx
+      - name: nginx
+        image: registry.k8s.io/nginx-slim:0.8
         ports:
         - containerPort: 80
           name: web
 ---
-apiVersion: apps/v1
 kind: StatefulSet
+apiVersion: apps/v1
 metadata:
+  name: persisted-test
   labels:
     notIn: arrays
-  name: persisted-test
 spec:
+  serviceName: test
   replicas: 1
   selector:
     matchLabels:
       app: test
       notIn: arrays
-  serviceName: test
   template:
     metadata:
       labels:
@@ -44,36 +44,34 @@ spec:
         notIn: arrays
     spec:
       containers:
-      - image: registry.k8s.io/nginx-slim:0.8
-        name: nginx
+      - name: nginx
+        image: registry.k8s.io/nginx-slim:0.8
         ports:
         - containerPort: 80
           name: web
         volumeMounts:
-        - mountPath: /usr/share/nginx/html
-          name: www
-        - mountPath: /usr/share/nginx/data
-          name: data
+        - name: www
+          mountPath: /usr/share/nginx/html
+        - name: data
+          mountPath: /usr/share/nginx/data
   volumeClaimTemplates:
   - metadata:
+      name: www
       labels:
         notIn: arrays
-      name: www
     spec:
-      accessModes:
-      - ReadWriteOnce
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: my-storage-class
       resources:
         requests:
           storage: 1Gi
-      storageClassName: my-storage-class
   - metadata:
+      name: data
       labels:
         notIn: arrays
-      name: data
     spec:
-      accessModes:
-      - ReadWriteOnce
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: my-storage-class
       resources:
         requests:
           storage: 100Gi
-      storageClassName: my-storage-class
