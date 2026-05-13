@@ -23,8 +23,8 @@ spec:
       storageClassName: my-sc
 ---
 apiVersion: v1
-data:
-  MY_ENV: foo
 kind: ConfigMap
 metadata:
   name: my-config
+data:
+  MY_ENV: foo

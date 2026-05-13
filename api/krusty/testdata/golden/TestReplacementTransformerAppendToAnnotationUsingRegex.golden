@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: d1
   annotations:
     visitedby: cm2,cm1,
-  name: d1
 spec:
   template:
     spec:
@@ -14,9 +14,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: d2
   annotations:
     visitedby: cm2,cm1,
-  name: d2
 spec:
   template:
     spec:
@@ -27,20 +27,20 @@ spec:
 apiVersion: apps/v1
 kind: ConfigMap
 metadata:
+  name: cm1
   annotations:
     visitedby: cm2,
-  name: cm1
 ---
 apiVersion: apps/v1
 kind: ConfigMap
 metadata:
+  name: cm2
   annotations:
     visitedby: cm1,
-  name: cm2
 ---
 apiVersion: apps/v1
 kind: postgresql
 metadata:
+  name: pg1
   annotations:
     visitedby: cm2,cm1,
-  name: pg1

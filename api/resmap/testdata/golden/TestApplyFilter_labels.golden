@@ -1,10 +1,10 @@
 apiVersion: example.com/v1
 kind: Beans
 metadata:
+  name: myBeans
   labels:
     a: foo
     b: bar
-  name: myBeans
 ---
 apiVersion: example.com/v1
 kind: Franks

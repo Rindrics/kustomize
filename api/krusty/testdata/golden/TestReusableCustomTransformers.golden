@@ -1,14 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: bob-myDeployment
   labels:
     company: acmeCorp
     pager: 867-5301
-  name: bob-myDeployment
 spec:
-  selector:
-    matchLabels:
-      company: acmeCorp
   template:
     metadata:
       labels:
@@ -16,24 +13,27 @@ spec:
         company: acmeCorp
     spec:
       containers:
-      - image: whatever
-        name: whatever
+      - name: whatever
+        image: whatever
+  selector:
+    matchLabels:
+      company: acmeCorp
 ---
 apiVersion: v1
 kind: Role
 metadata:
-  annotations:
-    status: probationary
+  name: myRole
   labels:
     company: acmeCorp
-  name: myRole
+  annotations:
+    status: probationary
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: bob-myService
   labels:
     company: acmeCorp
-  name: bob-myService
 spec:
   selector:
     company: acmeCorp

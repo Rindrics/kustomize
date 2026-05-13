@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: theDeployment
   annotations:
     river: mississippi
-  name: theDeployment
 spec:
   template:
-    metadata:
-      annotations:
-        river: mississippi
     spec:
       containers:
       - name: test
+    metadata:
+      annotations:
+        river: mississippi
 ---
 apiVersion: v1
-data:
-  waterway: mississippi
 kind: ConfigMap
 metadata:
+  name: theConfigMap-hdd8h8cgdt
   annotations:
     river: mississippi
-  name: theConfigMap-hdd8h8cgdt
+data:
+  waterway: mississippi

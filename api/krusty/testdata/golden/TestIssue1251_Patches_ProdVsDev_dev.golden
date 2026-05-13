@@ -5,8 +5,8 @@ metadata:
 spec:
   template:
     spec:
+      dnsPolicy: "ClusterFirst"
       containers:
-      - image: my-image
-        name: my-deployment
-      dnsPolicy: ClusterFirst
+      - name: my-deployment
+        image: my-image
       restartPolicy: Always

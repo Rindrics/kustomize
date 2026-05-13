@@ -1,6 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx
+  labels:
+    app: nginx
   annotations:
     config.kubernetes.io/origin: |
       configuredIn: gener.yaml
@@ -8,9 +11,6 @@ metadata:
         kind: executable
         name: demo
     tshirt-size: small
-  labels:
-    app: nginx
-  name: nginx
 spec:
   selector:
     matchLabels:
@@ -21,5 +21,5 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx

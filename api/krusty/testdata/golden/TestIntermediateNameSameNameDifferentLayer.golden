@@ -3,11 +3,11 @@ kind: Deployment
 metadata:
   name: gcp-emea-prod-foo
 spec:
-  replicas: 999
   template:
     spec:
       containers:
       - image: whatever
+  replicas: 999
 ---
 apiVersion: apps/v1
 kind: Deployment

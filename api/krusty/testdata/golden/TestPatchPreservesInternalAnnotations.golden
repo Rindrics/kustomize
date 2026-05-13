@@ -13,6 +13,6 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  name: fluentd-sa-abc
   annotations:
     note: this is a test annotation
-  name: fluentd-sa-abc

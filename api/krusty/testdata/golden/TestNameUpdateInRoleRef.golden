@@ -43,9 +43,9 @@ metadata:
   namespace: foo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+  version: v1
   kind: Role
   name: my-role
-  version: v1
 subjects:
 - kind: ServiceAccount
   name: default

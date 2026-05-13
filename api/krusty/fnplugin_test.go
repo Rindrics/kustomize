@@ -113,20 +113,20 @@ metadata:
   labels:
     airshipit.org/ephemeral-user-data: "true"
   name: node1-bmc-secret
+type: Opaque
 stringData:
   userData: |
     bootcmd:
     - mkdir /mnt/vda
-type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    tshirt-size: small
+  name: nginx
   labels:
     app: nginx
-  name: nginx
+  annotations:
+    tshirt-size: small
 spec:
   selector:
     matchLabels:
@@ -137,8 +137,8 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
@@ -204,20 +204,20 @@ metadata:
   labels:
     airshipit.org/ephemeral-user-data: "true"
   name: node1-bmc-secret
+type: Opaque
 stringData:
   userData: |
     bootcmd:
     - mkdir /mnt/vda
-type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    tshirt-size: small
+  name: nginx
   labels:
     app: nginx
-  name: nginx
+  annotations:
+    tshirt-size: small
 spec:
   selector:
     matchLabels:
@@ -228,8 +228,8 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
@@ -295,20 +295,20 @@ metadata:
   labels:
     airshipit.org/ephemeral-user-data: "true"
   name: node1-bmc-secret
+type: Opaque
 stringData:
   userData: |
     bootcmd:
     - mkdir /mnt/vda
-type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    tshirt-size: small
+  name: nginx
   labels:
     app: nginx
-  name: nginx
+  annotations:
+    tshirt-size: small
 spec:
   selector:
     matchLabels:
@@ -319,8 +319,8 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
 `, string(yml))
 	require.NoError(t, fSys.RemoveAll(tmpDir.String()))
 }
@@ -564,13 +564,13 @@ metadata:
     app: simplegenerator
   name: simplegenerator-svc
 spec:
+  selector:
+    app: simplegenerator
   ports:
   - name: http
     port: 8081
     protocol: TCP
     targetPort: 8081
-  selector:
-    app: simplegenerator
 `, string(actual))
 }
 
@@ -614,11 +614,11 @@ metadata:
 	assert.Equal(t, `apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: foo
   annotations:
     a-bool-value: "false"
     a-int-value: "0"
     a-string-value: ""
-  name: foo
 `, string(actual))
 }
 
@@ -677,16 +677,16 @@ data:
 	assert.Equal(t, `apiVersion: v1
 kind: Namespace
 metadata:
+  name: my-namespace
   labels:
     my-ns-name: function-test
-  name: my-namespace
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: another-namespace
   labels:
     my-ns-name: function-test
-  name: another-namespace
 `, string(actual))
 }
 
@@ -735,11 +735,11 @@ template: |
 	actual, err := m.AsYaml()
 	require.NoError(t, err)
 	assert.Equal(t, `apiVersion: v1
-data:
-  value: value
 kind: ConfigMap
 metadata:
   name: env
+data:
+  value: "value"
 `, string(actual))
 }
 

@@ -1,26 +1,26 @@
 apiVersion: foo/v1
 kind: AnimalPark
 metadata:
+  name: o-x-sandiego
   labels:
     app: myApp
     movie: planetOfTheApes
-  name: o-x-sandiego
 spec:
+  gorillaRef:
+    name: o-ursus
+  giraffeRef:
+    name: o-x-april
   food:
   - mimosa
   - bambooshoots
-  giraffeRef:
-    name: o-x-april
-  gorillaRef:
-    name: o-ursus
 ---
 apiVersion: foo/v1
 kind: Giraffe
 metadata:
+  name: o-x-april
   labels:
     app: myApp
     movie: planetOfTheApes
-  name: o-x-april
 spec:
   diet: mimosa
   location: NE
@@ -28,10 +28,10 @@ spec:
 apiVersion: foo/v1
 kind: Giraffe
 metadata:
+  name: o-x-may
   labels:
     app: myApp
     movie: planetOfTheApes
-  name: o-x-may
 spec:
   diet: acacia
   location: SE
@@ -39,10 +39,10 @@ spec:
 apiVersion: foo/v1
 kind: Gorilla
 metadata:
+  name: o-x-koko
   labels:
     app: myApp
     movie: planetOfTheApes
-  name: o-x-koko
 spec:
   diet: bambooshoots
   location: SW
@@ -50,9 +50,9 @@ spec:
 apiVersion: foo/v1
 kind: Gorilla
 metadata:
+  name: o-ursus
   labels:
     movie: planetOfTheApes
-  name: o-ursus
 spec:
   diet: heston
   location: Arizona

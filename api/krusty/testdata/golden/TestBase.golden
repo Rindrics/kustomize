@@ -32,11 +32,6 @@ kind: ClusterRole
 metadata:
   name: pfx-role-sfx
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - watch
-  - list
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]

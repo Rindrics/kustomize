@@ -11,11 +11,11 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - env:
+      - image: nginx
+        name: nginx
+        env:
         - name: SOMEENV
           value: SOMEVALUE
-        image: nginx
-        name: nginx
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,8 +30,8 @@ spec:
         some-label: some-value
     spec:
       containers:
-      - env:
+      - image: nginx
+        name: nginx
+        env:
         - name: SOMEENV
           value: SOMEVALUE
-        image: nginx
-        name: nginx

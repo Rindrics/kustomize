@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: nginx
   labels:
     app: nginx
-  name: nginx
 spec:
   template:
     metadata:
@@ -11,14 +11,14 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: image1
-        name: nginx
+      - name: nginx
+        image: image1
         volumeMounts:
-        - mountPath: /tmp/ps
-          name: nginx-persistent-storage
+        - name: nginx-persistent-storage
+          mountPath: /tmp/ps
       volumes:
-      - emptyDir: {}
-        name: nginx-persistent-storage
+      - name: nginx-persistent-storage
+        emptyDir: {}
       - configMap:
           name: configmap-in-base
         name: configmap-in-base

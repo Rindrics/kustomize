@@ -3,21 +3,21 @@ kind: StatefulSet
 metadata:
   name: my-sts
 spec:
+  serviceName: my-https-svc
   selector:
     matchLabels:
       app: my-app
-  serviceName: my-https-svc
   template:
     metadata:
       labels:
         app: my-app
     spec:
       containers:
-      - envFrom:
+      - name: app
+        image: my-image
+        envFrom:
         - configMapRef:
             name: my-config
-        image: my-image
-        name: app
       tolerations:
       - effect: NoExecute
         key: node.kubernetes.io/not-ready
@@ -32,15 +32,15 @@ metadata:
   name: my-https-svc
 spec:
   ports:
-  - name: https
-    port: 443
+  - port: 443
     protocol: TCP
+    name: https
   selector:
     app: my-app
 ---
 apiVersion: v1
-data:
-  MY_ENV: foo
 kind: ConfigMap
 metadata:
   name: my-config
+data:
+  MY_ENV: foo

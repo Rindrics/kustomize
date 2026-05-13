@@ -10,8 +10,8 @@ spec:
         name: app
 ---
 apiVersion: v1
-data:
-  name: something-else
 kind: ConfigMap
 metadata:
   name: app-config-dev-97544dk6t8
+data:
+  name: something-else

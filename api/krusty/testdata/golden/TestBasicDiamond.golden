@@ -7,11 +7,11 @@ spec:
   type: Confident
 ---
 apiVersion: v1
-data:
-  phaser: caress
 kind: ConfigMap
 metadata:
   name: prod-t-kirk-settings
+data:
+  phaser: caress
 ---
 apiVersion: v1
 kind: Deployment
@@ -26,14 +26,14 @@ kind: Deployment
 metadata:
   name: prod-t-bones-storefront
 spec:
-  mood: Cantankerous
   numReplicas: 1
   type: Concerned
+  mood: Cantankerous
 ---
 apiVersion: v1
-data:
-  guardian: ofTheGalaxy
-  zone: twilight
 kind: ConfigMap
 metadata:
   name: prod-t-federation
+data:
+  zone: twilight
+  guardian: ofTheGalaxy

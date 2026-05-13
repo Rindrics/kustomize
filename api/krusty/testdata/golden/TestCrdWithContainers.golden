@@ -4,13 +4,13 @@ metadata:
   name: crontabs.stable.example.com
 spec:
   group: stable.example.com
+  scope: Namespaced
   names:
-    kind: CronTab
     plural: crontabs
+    singular: crontab
+    kind: CronTab
     shortNames:
     - ct
-    singular: crontab
-  scope: Namespaced
   validation:
     openAPIV3Schema:
       properties:

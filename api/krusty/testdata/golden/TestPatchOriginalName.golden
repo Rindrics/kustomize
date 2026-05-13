@@ -3,9 +3,9 @@ kind: Deployment
 metadata:
   name: new-name
 spec:
-  replicas: 999
   template:
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
+  replicas: 999

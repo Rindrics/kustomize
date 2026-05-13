@@ -6,13 +6,13 @@ spec:
   template:
     spec:
       containers:
-      - command: example
+      - name: server
         image: nginx
-        name: server
+        command: example
         ports:
-        - containerPort: 8080
-          name: grpc
+        - name: grpc
           protocol: TCP
+          containerPort: 8080
 ---
 apiVersion: v1alpha1
 kind: MyCRD
@@ -22,10 +22,10 @@ spec:
   template:
     spec:
       containers:
-      - command: example
+      - name: server
         image: nginx
-        name: server
+        command: example
         ports:
-        - containerPort: 8080
-          name: grpc
+        - name: grpc
           protocol: TCP
+          containerPort: 8080

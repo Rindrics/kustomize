@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: myService
   labels:
     app.kubernetes.io/managed-by: kustomize-(test)
-  name: myService
 spec:
   ports:
   - port: 7002
