@@ -1,0 +1,261 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+rules:
+- apiGroups:
+  - certificates.k8s.io
+  resources:
+  - certificatesigningrequests
+  verbs:
+  - create
+  - get
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: dev-base-cockroachdb
+subjects:
+- kind: ServiceAccount
+  name: dev-base-cockroachdb
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dev-base-cockroachdb
+subjects:
+- kind: ServiceAccount
+  name: dev-base-cockroachdb
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-base-cockroachdb
+  labels:
+    app: cockroachdb
+  annotations:
+    prometheus.io/path: _status/vars
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  ports:
+  - port: 26257
+    targetPort: 26257
+    name: grpc
+  - port: 8080
+    targetPort: 8080
+    name: http
+  clusterIP: None
+  selector:
+    app: cockroachdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # This service is meant to be used by clients of the database. It exposes a ClusterIP that will
+  # automatically load balance connections to the different database pods.
+  name: dev-base-cockroachdb-public
+  labels:
+    app: cockroachdb
+spec:
+  ports:
+  # The main port, served by gRPC, serves Postgres-flavor SQL, internode
+  # traffic and the cli.
+  - port: 26257
+    targetPort: 26257
+    name: grpc
+  # The secondary port serves the UI as well as health and debug endpoints.
+  - port: 8080
+    targetPort: 8080
+    name: http
+  selector:
+    app: cockroachdb
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: dev-base-cockroachdb
+spec:
+  serviceName: "dev-base-cockroachdb"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: cockroachdb
+    spec:
+      serviceAccountName: dev-base-cockroachdb
+      # Init containers are run only once in the lifetime of a pod, before
+      # it's started up for the first time. It has to exit successfully
+      # before the pod's main containers are allowed to start.
+      initContainers:
+      # The init-certs container sends a certificate signing request to the
+      # kubernetes cluster.
+      # You can see pending requests using: kubectl get csr
+      # CSRs can be approved using:         kubectl certificate approve <csr name>
+      #
+      # All addresses used to contact a node must be specified in the --addresses arg.
+      #
+      # In addition to the node certificate and key, the init-certs entrypoint will symlink
+      # the cluster CA to the certs directory.
+      - name: init-certs
+        image: cockroachdb/cockroach-k8s-request-cert:0.2
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/ash
+        - -ecx
+        - /request-cert
+        - -namespace=${POD_NAMESPACE}
+        - -certs-dir=/cockroach-certs
+        - -type=node
+        - -addresses=localhost,127.0.0.1,${POD_IP},$(hostname -f),$(hostname -f|cut -f 1-2 -d '.'),dev-base-cockroachdb-public
+        - -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: certs
+          mountPath: /cockroach-certs
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - cockroachdb
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: cockroachdb
+        image: cockroachdb/cockroach:v1.1.5
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 26257
+          name: grpc
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: datadir
+          mountPath: /cockroach/cockroach-data
+        - name: certs
+          mountPath: /cockroach/cockroach-certs
+        command:
+        - /bin/bash
+        - -ecx
+        - exec /cockroach/cockroach start --logtostderr
+        - --certs-dir /cockroach/cockroach-certs
+        - --host $(hostname -f)
+        - --http-host 0.0.0.0
+        - --join dev-base-cockroachdb-0.dev-base-cockroachdb,dev-base-cockroachdb-1.dev-base-cockroachdb,dev-base-cockroachdb-2.dev-base-cockroachdb
+        - --cache 25%
+        - --max-sql-memory 25%
+      # No pre-stop hook is required, a SIGTERM plus some time is all that's
+      # needed for graceful shutdown of a node.
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: datadir
+      - name: certs
+        emptyDir: {}
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes:
+      - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: dev-base-cronjob-example
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob-example
+            image: cockroachdb/cockroach:v1.1.5
+            command:
+            - echo
+            - dev-base-cockroachdb
+            - dev-base-test-config-map-6b85g79g7g
+            env:
+            - name: CDB_PUBLIC_SVC
+              value: dev-base-cockroachdb-public
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: dev-base-cockroachdb-budget
+  labels:
+    app: cockroachdb
+spec:
+  selector:
+    matchLabels:
+      app: cockroachdb
+  maxUnavailable: 1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dev-base-test-config-map-6b85g79g7g
+data:
+  baz: qux
+  foo: bar

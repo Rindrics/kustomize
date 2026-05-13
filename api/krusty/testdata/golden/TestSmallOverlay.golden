@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: b-a-myDeployment
+  labels:
+    app: myApp
+    env: prod
+    quotedBoolean: "true"
+    quotedFruit: peach
+spec:
+  template:
+    metadata:
+      labels:
+        backend: awesome
+        app: myApp
+        env: prod
+        quotedBoolean: "true"
+        quotedFruit: peach
+    spec:
+      containers:
+      - name: whatever
+        image: whatever:1.8.0
+  selector:
+    matchLabels:
+      app: myApp
+      env: prod
+      quotedBoolean: "true"
+      quotedFruit: peach
+  replicas: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: b-a-myService
+  labels:
+    app: myApp
+    env: prod
+    quotedBoolean: "true"
+    quotedFruit: peach
+spec:
+  selector:
+    backend: bungie
+    app: myApp
+    env: prod
+    quotedBoolean: "true"
+    quotedFruit: peach
+  ports:
+  - port: 7002

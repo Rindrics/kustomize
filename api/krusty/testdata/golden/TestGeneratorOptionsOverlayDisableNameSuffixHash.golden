@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: baseShouldHaveHashButOverlayShouldNot
+  labels:
+    foo: bar
+    fruit: apple
+data:
+  foo: bar
+  fruit: apple

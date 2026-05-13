@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: d1
+  annotations:
+    visitedby: cm2,cm1,
+spec:
+  template:
+    spec:
+      containers:
+      - image: app1:1.0
+        name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: d2
+  annotations:
+    visitedby: cm2,cm1,
+spec:
+  template:
+    spec:
+      containers:
+      - image: app2:1.0
+        name: app
+---
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: cm1
+  annotations:
+    visitedby: cm2,
+---
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: cm2
+  annotations:
+    visitedby: cm1,
+---
+apiVersion: apps/v1
+kind: postgresql
+metadata:
+  name: pg1
+  annotations:
+    visitedby: cm2,cm1,

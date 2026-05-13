@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-sts
+spec:
+  serviceName: my-https-svc
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: app
+        image: my-image
+        envFrom:
+        - configMapRef:
+            name: my-config
+      tolerations:
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        tolerationSeconds: 30
+  volumeClaimTemplates:
+  - spec:
+      storageClassName: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-https-svc
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: my-app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+data:
+  MY_ENV: foo

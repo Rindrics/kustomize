@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: betty
+data:
+  color: blue
+  feeling: blue
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bob
+data:
+  color: red
+  feeling: blue

@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    airshipit.org/ephemeral-user-data: "true"
+  name: node1-bmc-secret
+  annotations:
+    config.kubernetes.io/origin: |
+      path: short_secret.yaml
+type: Opaque
+stringData:
+  userData: |
+    bootcmd:
+    - mkdir /mnt/vda
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  annotations:
+    config.kubernetes.io/origin: |
+      configuredIn: kustomization.yaml
+      configuredBy:
+        kind: executable
+        name: demo
+    tshirt-size: small
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx

@@ -1,0 +1,5 @@
+kind: Pod
+metadata:
+  name: test
+  finalizers: ["foo", "bar"]
+apiVersion: v1
